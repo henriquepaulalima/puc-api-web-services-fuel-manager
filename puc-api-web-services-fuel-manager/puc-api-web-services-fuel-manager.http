@@ -1,0 +1,6 @@
+@puc_api_web_services_fuel_manager_HostAddress = http://localhost:5183
+
+GET {{puc_api_web_services_fuel_manager_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
