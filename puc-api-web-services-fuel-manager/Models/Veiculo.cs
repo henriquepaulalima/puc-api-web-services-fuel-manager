@@ -19,5 +19,6 @@ namespace puc_api_web_services_fuel_manager.Models
         [Required]
         public int AnoModelo { get; set; }
         public ICollection<Consumo> Consumos { get; set; }
+        public ICollection<VeiculosUsuariosXref> Usuarios { get; set; }
     }
 }
