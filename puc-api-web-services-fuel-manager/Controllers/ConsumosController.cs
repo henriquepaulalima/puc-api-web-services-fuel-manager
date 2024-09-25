@@ -7,11 +7,11 @@ namespace puc_api_web_services_fuel_manager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VeiculosController : ControllerBase
+    public class ConsumosController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public VeiculosController(AppDbContext context)
+        public ConsumosController(AppDbContext context)
         {
             _context = context;
         }
@@ -19,20 +19,15 @@ namespace puc_api_web_services_fuel_manager.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAll()
         {
-            var model = await _context.Veiculos.ToListAsync();
+            var model = await _context.Consumos.ToListAsync();
 
             return Ok(model);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(Veiculo model)
+        public async Task<ActionResult> Create(Consumo model)
         {
-            if (model.AnoFabricacao <= 0 || model.AnoModelo <= 0)
-            {
-                return BadRequest(new { message = "Anofabricao and AnoModel cannot be empty" });
-            }
-
-            _context.Veiculos.Add(model);
+            _context.Consumos.Add(model);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetById", new { id = model.Id }, model);
@@ -41,9 +36,7 @@ namespace puc_api_web_services_fuel_manager.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(int id)
         {
-            var model = await _context.Veiculos
-                .Include(table => table.Consumos)
-                .FirstOrDefaultAsync(veiculo => veiculo.Id == id);
+            var model = await _context.Consumos.FirstOrDefaultAsync(consumo => consumo.Id == id);
 
             if (model == null) return NotFound();
 
@@ -51,17 +44,17 @@ namespace puc_api_web_services_fuel_manager.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, Veiculo model)
+        public async Task<ActionResult> Update(int id, Consumo model)
         {
             if (id != model.Id) return BadRequest();
 
-            var modelDb = await _context.Veiculos
+            var modelDb = await _context.Consumos
                 .AsNoTracking()
-                .FirstOrDefaultAsync(veiculo => veiculo.Id == id);
+                .FirstOrDefaultAsync(consumo => consumo.Id == id);
 
             if (modelDb == null) return NotFound();
 
-            _context.Veiculos.Update(model);
+            _context.Consumos.Update(model);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -70,11 +63,11 @@ namespace puc_api_web_services_fuel_manager.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var model = await _context.Veiculos.FindAsync(id);
+            var model = await _context.Consumos.FindAsync(id);
 
             if (model == null) return NotFound();
 
-            _context.Veiculos.Remove(model);
+            _context.Consumos.Remove(model);
             await _context.SaveChangesAsync();
 
             return NoContent();
