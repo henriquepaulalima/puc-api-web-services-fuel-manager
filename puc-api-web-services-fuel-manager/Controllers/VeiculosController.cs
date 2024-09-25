@@ -43,7 +43,7 @@ namespace puc_api_web_services_fuel_manager.Controllers
         {
             var model = await _context.Veiculos.FirstOrDefaultAsync(veiculo => veiculo.Id == id);
 
-            if (model == null) NotFound();
+            if (model == null) return NotFound();
 
             return Ok(model);
         }
@@ -70,7 +70,7 @@ namespace puc_api_web_services_fuel_manager.Controllers
         {
             var model = await _context.Veiculos.FindAsync(id);
 
-            if (model == null) NotFound();
+            if (model == null) return NotFound();
 
             _context.Veiculos.Remove(model);
             await _context.SaveChangesAsync();
