@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace puc_api_web_services_fuel_manager.Models
 {
@@ -12,6 +12,7 @@ namespace puc_api_web_services_fuel_manager.Models
         [Required]
         public string Nome { get; set; }
         [Required]
+        [JsonIgnore]
         public string Password { get; set; }
         [Required]
         public Perfil Perfil { get; set; }

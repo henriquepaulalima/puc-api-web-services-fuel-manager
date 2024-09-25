@@ -42,6 +42,7 @@ namespace puc_api_web_services_fuel_manager.Controllers
         public async Task<ActionResult> GetById(int id)
         {
             var model = await _context.Veiculos
+                .Include(table => table.Usuarios).ThenInclude(table => table.Usuario)
                 .Include(table => table.Consumos)
                 .FirstOrDefaultAsync(veiculo => veiculo.Id == id);
 
@@ -77,6 +78,32 @@ namespace puc_api_web_services_fuel_manager.Controllers
             if (model == null) return NotFound();
 
             _context.Veiculos.Remove(model);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpPost("{id}/usuarios")]
+        public async Task<ActionResult> AddUsuario(int id, VeiculosUsuariosXref model)
+        {
+            if (id != model.VeiculoId) return BadRequest();
+
+            _context.VeiculosUsuariosXref.Add(model);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetById", new { id = model.VeiculoId }, model);
+        }
+
+        [HttpDelete("{id}/usuarios/{usuarioId}")]
+        public async Task<ActionResult> DeleteUsuario(int id, int usuarioId)
+        {
+            var model = await _context.VeiculosUsuariosXref
+                .Where(field => field.VeiculoId == id && field.UsuarioId == usuarioId)
+                .FirstOrDefaultAsync();
+
+            if (model == null) return NotFound();
+
+            _context.VeiculosUsuariosXref.Remove(model);
             await _context.SaveChangesAsync();
 
             return NoContent();
