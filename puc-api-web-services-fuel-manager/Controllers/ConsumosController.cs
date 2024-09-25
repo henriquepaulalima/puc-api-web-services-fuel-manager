@@ -36,9 +36,13 @@ namespace puc_api_web_services_fuel_manager.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(int id)
         {
-            var model = await _context.Consumos.FirstOrDefaultAsync(consumo => consumo.Id == id);
+            var model = await _context.Consumos
+                .Include(table => table.Veiculo)
+                .FirstOrDefaultAsync(consumo => consumo.Id == id);
 
             if (model == null) return NotFound();
+
+            GerarLinks(model);
 
             return Ok(model);
         }
@@ -71,6 +75,13 @@ namespace puc_api_web_services_fuel_manager.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private void GerarLinks(Consumo model)
+        {
+            model.Links.Add(new LinkDto(model.Id, Url.ActionLink(), rel: "self", metodo: "GET"));
+            model.Links.Add(new LinkDto(model.Id, Url.ActionLink(), rel: "update", metodo: "PUT"));
+            model.Links.Add(new LinkDto(model.Id, Url.ActionLink(), rel: "delete", metodo: "DELETE"));
         }
     }
 }
