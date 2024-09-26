@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using puc_api_web_services_fuel_manager.Models;
 
 namespace puc_api_web_services_fuel_manager.Controllers
 {
+    [Authorize(Roles = "Administrador,Usuario")]
     [Route("api/[controller]")]
     [ApiController]
     public class VeiculosController : ControllerBase
@@ -15,7 +16,7 @@ namespace puc_api_web_services_fuel_manager.Controllers
         {
             _context = context;
         }
-
+        
         [HttpGet]
         public async Task<ActionResult> GetAll()
         {
